@@ -1,0 +1,1 @@
+# vetcore_apigateway_msvc
