@@ -24,7 +24,14 @@ router.use(
   proxyRequest(SERVICES.AUTH.url)
 );
 
-// Rutas del servicio de autenticación
+// Rutas del servicio de usuarios (mismo servicio que auth)
+router.use(
+  SERVICES.USERS.prefix,
+  authRateLimiter,
+  proxyRequest(SERVICES.USERS.url)
+);
+
+// Rutas del servicio de pacientes
 router.use(
   SERVICES.PATIENTS.prefix,
   generalRateLimiter,
