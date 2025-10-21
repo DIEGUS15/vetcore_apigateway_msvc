@@ -52,6 +52,6 @@ app.use((err, req, res, next) => {
 
 // Iniciar servidor
 app.listen(PORT, () => {
-  console.log(`🌐 API Gateway running on http://localhost:${PORT}`);
-  console.log(`📡 Proxying requests to microservices...`);
+  console.log(`API Gateway running on http://localhost:${PORT}`);
+  console.log(`Proxying requests to microservices...`);
 });
