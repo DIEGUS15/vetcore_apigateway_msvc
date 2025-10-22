@@ -8,6 +8,14 @@ import {
 
 const router = express.Router();
 
+router.get("/", (req, res) => {
+  res.json({
+    success: true,
+    message: "Yes, it's working 8)",
+    timestamp: new Date().toISOString(),
+  });
+});
+
 // Ruta de salud del API Gateway
 router.get("/health", (req, res) => {
   res.json({
