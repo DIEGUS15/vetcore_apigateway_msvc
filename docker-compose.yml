@@ -1,0 +1,28 @@
+# Docker Compose para desarrollo independiente del API Gateway
+# Uso: docker-compose up
+
+services:
+  api-gateway:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: vetcore_apigateway_dev
+    ports:
+      - "8000:8000"
+    environment:
+      PORT: 8000
+      # Apunta a servicios en localhost (asume que otros servicios corren fuera de Docker)
+      AUTH_SERVICE_URL: http://host.docker.internal:3000
+      PATIENTS_SERVICE_URL: http://host.docker.internal:3001
+      CORS_ORIGIN: "*"
+      NODE_ENV: development
+    # Descomentar para hot-reload en desarrollo
+    # volumes:
+    #   - ./src:/app/src
+    #   - /app/node_modules
+    networks:
+      - apigateway-network
+
+networks:
+  apigateway-network:
+    driver: bridge
