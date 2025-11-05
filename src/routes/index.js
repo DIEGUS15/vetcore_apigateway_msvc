@@ -38,11 +38,11 @@ router.use(
   proxyRequest(SERVICES.PATIENTS.url)
 );
 
-// Aquí puedes agregar más rutas para otros microservicios
-// router.use(
-//   SERVICES.APPOINTMENTS.prefix,
-//   generalRateLimiter,
-//   proxyRequest(SERVICES.APPOINTMENTS.url)
-// );
+// Rutas del servicio de citas
+router.use(
+  SERVICES.APPOINTMENTS.prefix,
+  generalRateLimiter,
+  proxyRequest(SERVICES.APPOINTMENTS.url)
+);
 
 export default router;

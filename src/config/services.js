@@ -15,9 +15,8 @@ export const SERVICES = {
     url: process.env.PATIENTS_SERVICE_URL || "http://localhost:3001",
     prefix: "/api/patients",
   },
-  // Aquí puedes agregar más microservicios en el futuro
-  // APPOINTMENTS: {
-  //   url: process.env.APPOINTMENTS_SERVICE_URL || "http://localhost:3001",
-  //   prefix: "/api/appointments",
-  // },
+  APPOINTMENTS: {
+    url: process.env.APPOINTMENTS_SERVICE_URL || "http://localhost:3003",
+    prefix: "/api/appointments",
+  },
 };
