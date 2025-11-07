@@ -45,4 +45,18 @@ router.use(
   proxyRequest(SERVICES.APPOINTMENTS.url)
 );
 
+// Rutas del servicio de horarios
+router.use(
+  SERVICES.SCHEDULE.prefix,
+  generalRateLimiter,
+  proxyRequest(SERVICES.SCHEDULE.url, "/schedule")
+);
+
+// Alias público: admitir también /schedule para compatibilidad con llamadas directas
+router.use(
+  "/schedule",
+  generalRateLimiter,
+  proxyRequest(SERVICES.SCHEDULE.url, "/schedule")
+);
+
 export default router;

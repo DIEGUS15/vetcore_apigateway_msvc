@@ -1,14 +1,19 @@
 import axios from "axios";
 
-export const proxyRequest = (serviceUrl) => {
+export const proxyRequest = (serviceUrl, targetPrefix) => {
   return async (req, res) => {
     try {
       const { method, body, query, params, headers } = req;
 
       // Construir la URL completa del microservicio
-      // req.baseUrl contiene el prefijo (ej: /api/auth)
-      // req.path contiene el resto de la ruta (ej: /register)
-      const targetUrl = `${serviceUrl}${req.baseUrl}${req.path}`;
+      // Si se proporciona targetPrefix, usarlo como la ruta base hacia el servicio
+      // de lo contrario usar req.baseUrl (la ruta montada en el API Gateway)
+      const base = typeof targetPrefix === 'string' ? targetPrefix : req.baseUrl;
+  // req.path contiene el resto de la ruta (ej: /register o /123)
+  const targetUrl = `${serviceUrl}${base}${req.path}`;
+
+  // Debug: mostrar mapeo de ruta
+  console.log(`[proxy] ${method} ${req.baseUrl}${req.path} -> ${targetUrl}`);
 
       // Preparar headers (excluir host)
       const forwardHeaders = { ...headers };
@@ -29,8 +34,8 @@ export const proxyRequest = (serviceUrl) => {
         config.data = body;
       }
 
-      // Realizar la petición al microservicio
-      const response = await axios(config);
+  // Realizar la petición al microservicio
+  const response = await axios(config);
 
       // Devolver la respuesta del microservicio
       res.status(response.status).json(response.data);
