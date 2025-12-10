@@ -22,6 +22,7 @@ export const proxyRequest = (serviceUrl) => {
         headers: forwardHeaders,
         params: query,
         timeout: 30000, // 30 segundos
+        responseType: 'arraybuffer', // Recibir respuesta como buffer para soportar archivos binarios
       };
 
       // Agregar body solo si no es GET o HEAD
@@ -32,14 +33,39 @@ export const proxyRequest = (serviceUrl) => {
       // Realizar la petición al microservicio
       const response = await axios(config);
 
+      // Copiar headers del microservicio
+      const contentType = response.headers['content-type'];
+      if (contentType) {
+        res.setHeader('Content-Type', contentType);
+      }
+
+      // Copiar Content-Disposition si existe (para descargas)
+      const contentDisposition = response.headers['content-disposition'];
+      if (contentDisposition) {
+        res.setHeader('Content-Disposition', contentDisposition);
+      }
+
       // Devolver la respuesta del microservicio
-      res.status(response.status).json(response.data);
+      // Si es JSON, parsearlo; si es binario (PDF, imágenes), enviarlo directamente
+      if (contentType && contentType.includes('application/json')) {
+        const jsonData = JSON.parse(response.data.toString('utf8'));
+        res.status(response.status).json(jsonData);
+      } else {
+        // Enviar datos binarios directamente
+        res.status(response.status).send(response.data);
+      }
     } catch (error) {
       console.error(`Error proxying request to ${serviceUrl}:`, error.message);
 
       if (error.response) {
         // El microservicio respondió con un error
-        return res.status(error.response.status).json(error.response.data);
+        const contentType = error.response.headers['content-type'];
+        if (contentType && contentType.includes('application/json')) {
+          const errorData = JSON.parse(error.response.data.toString('utf8'));
+          return res.status(error.response.status).json(errorData);
+        } else {
+          return res.status(error.response.status).send(error.response.data);
+        }
       } else if (error.code === "ECONNREFUSED") {
         // El microservicio no está disponible
         return res.status(503).json({
