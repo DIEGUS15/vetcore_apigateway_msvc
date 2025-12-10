@@ -19,4 +19,8 @@ export const SERVICES = {
     url: process.env.APPOINTMENTS_SERVICE_URL || "http://localhost:3003",
     prefix: "/api/appointments",
   },
+  STAFF: {
+    url: process.env.STAFF_SERVICE_URL || "http://localhost:3004",
+    prefix: "/api/staff",
+  },
 };

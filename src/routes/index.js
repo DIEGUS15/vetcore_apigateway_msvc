@@ -45,4 +45,11 @@ router.use(
   proxyRequest(SERVICES.APPOINTMENTS.url)
 );
 
+// Rutas del servicio de personal
+router.use(
+  SERVICES.STAFF.prefix,
+  generalRateLimiter,
+  proxyRequest(SERVICES.STAFF.url)
+);
+
 export default router;
